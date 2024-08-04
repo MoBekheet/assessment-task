@@ -8,20 +8,39 @@
       data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
+      (click)="isNavbarCollapsed =! isNavbarCollapsed"
       aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" [ngbCollapse]="isNavbarCollapsed" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">HOME</a>
         </li>
         <li class="nav-item"><a class="nav-link" href="#">ABOUT</a></li>
-        <li class="nav-item"><a class="nav-link" (click)="authService.logout()">CONTACT</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">CONTACT</a></li>
         <li class="nav-item"><button class="btn btn-primary rounded-5 px-4 py-2 ms-3" type="button">ENQUIRE</button></li>
       </ul>
     </div>
   </div>
 </nav>
 
-<router-outlet></router-outlet>
+<!-- Breadcrumbs are currently fixed not working when navigating between pages. -->
+@if(authService.isLoggedIn) {
+<div class="py-3 shadow-sm border" style="background-color: #dedede">
+  <div class="container d-flex align-items-center justify-content-between">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-primary">Home</a></li>
+        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-primary">Dashboard</a></li>
+      </ol>
+      <h2 class="text-muted">Users List</h2>
+    </nav>
+    <a href="#" (click)="authService.logout()" class="text-decoration-none text-danger">Logout</a>
+  </div>
+</div>
+}
+
+<div class="container mt-4">
+  <router-outlet></router-outlet>
+</div>

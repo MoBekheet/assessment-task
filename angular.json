@@ -54,6 +54,7 @@
               }
             ],
             "styles": [
+              "public/icons/css/fontello.css",
               "src/styles.scss"
             ],
             "scripts": []

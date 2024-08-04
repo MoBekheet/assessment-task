@@ -12,7 +12,7 @@ export class AuthService {
   private router = inject(Router);
 
   public login(body: { email: string; password: string }): Observable<any> {
-    return this.apiService.loginReq(body).pipe(tap(res => res.token && localStorage.setItem(tokenKey, res.token)));
+    return this.apiService.login(body).pipe(tap(res => res.token && localStorage.setItem(tokenKey, res.token)));
   }
 
   public logout(): void {

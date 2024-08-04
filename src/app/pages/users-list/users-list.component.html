@@ -1,0 +1,180 @@
+<div class="text-end mb-3">
+  <button class="btn btn-primary" type="button" (click)="openModal(addEditModal)"><i class="fas fa-plus"></i>New User</button>
+</div>
+
+<div class="bg-white shadow rounded" [ngClass]="{'row' : (selectedUser || loadingView)}">
+
+  <!-- Section for the user list -->
+  <section class="ps-2 py-2" [ngClass]="{'col-md-8' : (selectedUser || loadingView)}">
+    <table class="table table-hover">
+
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th class="text-end pe-5" scope="col">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- Loop through users and display each user in a table row -->
+        @for(user of users; track user.id) {
+        <tr (click)="!loadingView && selectUser(user.id)" role="button" [ngClass]="{'table-active': selectedUser?.id === user.id}">
+
+          <td [ngClass]="{'border-bottom-0' : $last}">
+            <div class="d-flex align-items-center">
+              <div class="position-relative rounded-circle overflow-hidden" style="width: 60px; height: 60px">
+                <img [ngSrc]="user.avatar" [alt]="user.first_name" class="position-relative object-fit-cover" fill priority />
+              </div>
+              <span class="ms-3"> {{ user.first_name }} {{ user.last_name }} </span>
+            </div>
+          </td>
+
+          <td [ngClass]="{'border-bottom-0' : $last}" class="text-end align-middle">
+            <!-- Actions buttons for edit and delete -->
+            @if (selectedUser?.id !== user.id) {
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="openModal(addEditModal, user); $event.stopPropagation()">
+              <i class="icon-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger me-2" (click)="ConfirmDeleteUser(user.id); $event.stopPropagation()">
+              <i class="icon-trash-empty"></i>
+            </button>
+            }
+            <i class="icon-right-open text-muted"></i>
+          </td>
+
+        </tr>
+        }
+      </tbody>
+
+    </table>
+
+    <!-- Load more users button -->
+    @if(!loadingUsersList && totalCount > users.length) {
+    <div class="col-12 text-center mb-3">
+      <button class="btn btn-primary" type="button" (click)="loadMoreUsers()"><i class="fas fa-plus"></i>Load More</button>
+    </div>
+    }
+
+    <!-- Loading spinner while fetching more users -->
+    @if(loadingUsersList) {
+    <div class="d-flex align-items-center justify-content-center flex-column">
+      <div class="spinner-border text-primary" role="status"></div>
+      <div>Loading more users</div>
+    </div>
+    }
+
+  </section>
+
+  <!-- Section for the selected user's details -->
+  @if (selectedUser !== null) {
+  <section class="col-md-4 p-3 shadow rounded bg-primary">
+
+    <div class="text-end">
+      <button type="button" class="btn-close me-3" aria-label="Close" (click)="selectedUser = null"></button>
+    </div>
+
+    <div class="text-center">
+
+      <div class="position-relative rounded-circle mx-auto mb-3 overflow-hidden" style="width: 150px; height: 150px">
+        <img [ngSrc]="selectedUser.avatar" [alt]="selectedUser.first_name" class="position-relative object-fit-cover" fill priority />
+      </div>
+
+      <h4 class="mb-3">{{ selectedUser.first_name }} {{ selectedUser.last_name }}</h4>
+
+      <button class="btn btn-primary me-3" (click)="openModal(addEditModal, selectedUser!)">
+        <i class="icon-edit"></i>
+        Edit
+      </button>
+
+      <button class="btn btn-outline-danger" (click)="ConfirmDeleteUser(selectedUser.id)">
+        <i class="icon-trash-empty"></i>
+        Delete
+      </button>
+    </div>
+
+  </section>
+
+  } @else if (loadingView) {
+    <!-- Loading view while fetching user details -->
+    <section class="col-md-4 shadow rounded bg-primary">
+    <div class="d-flex align-items-center justify-content-center flex-column h-100">
+      <div class="spinner-border text-primary" role="status"></div>
+      <div>Loading...</div>
+    </div>
+  </section>
+  }
+</div>
+
+<!-- Add/Edit Modal -->
+<ng-template #addEditModal let-modal>
+  <div class="modal-body">
+    <form [formGroup]="addEditForm">
+
+      <div class="position-absolute rounded-circle mx-auto mb-3 overflow-hidden modal-img" style="width: 150px; height: 150px">
+        <img
+          [ngSrc]="addEditForm.get('avatar')?.value || 'images/avatar.jpg'"
+          [alt]="addEditForm.get('first_name')?.value"
+          class="position-relative object-fit-cover"
+          fill
+          priority />
+      </div>
+
+      <div class="mb-3 mt-5">
+        <label for="first_name" class="form-label">First name</label>
+        <input
+          type="text"
+          [attr.disabled]="loadingAddEdit"
+          class="form-control"
+          [ngClass]="{'is-invalid': submitted && addEditForm.get('first_name')?.hasError('required')}"
+          id="first_name"
+          formControlName="first_name" />
+
+        <!-- Validation message for first name -->
+        @if (submitted && addEditForm.get('first_name')?.hasError('required')) {
+        <div class="invalid-feedback">First name is required.</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="job" class="form-label">Job Title</label>
+        <input type="text" [attr.disabled]="loadingAddEdit" class="form-control" id="job" formControlName="job" />
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="w-100 text-center row">
+
+      <div class="col-6 d-grid gap-2">
+        <button type="button" class="btn btn-outline-primary rounded-5 px-5 py-2" [disabled]="loadingAddEdit" (click)="modal.dismiss('Cancel click')">
+          Cancel
+        </button>
+      </div>
+
+      <div class="col-6 d-grid gap-2">
+        <!-- Save button for updating or adding a user -->
+        @if (addEditForm.get('id')?.value) {
+
+          <button type="button" class="btn btn-primary rounded-5 px-5 py-2 lh-1" [disabled]="loadingAddEdit" (click)="updateUser()">
+            @if (loadingAddEdit) {
+            <div class="spinner-border spinner-btn text-white" role="status"></div>
+            } @else {
+              Save
+            }
+          </button>
+
+        } @else {
+
+        <button type="button" class="btn btn-primary rounded-5 px-5 py-2 lh-1" [disabled]="loadingAddEdit" (click)="addUser()">
+          @if (loadingAddEdit) {
+          <div class="spinner-border spinner-btn text-white" role="status"></div>
+          } @else {
+            Add
+          }
+        </button>
+
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>
