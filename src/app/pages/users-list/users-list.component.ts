@@ -22,7 +22,7 @@ export class UsersListComponent implements OnInit {
   selectedUser: User | null = null;
   loadingView = false;
   loadingAddEdit = false;
-  totalCount = 0;
+  totalPages = 0;
   loadingUsersList = false;
   submitted = false;
   addEditForm: FormGroup = new FormGroup({});
@@ -51,7 +51,7 @@ export class UsersListComponent implements OnInit {
     this.apiService.getUsers(this.currentPage).subscribe(
       response => {
         this.users = [...this.users, ...response.data];
-        this.totalCount = response.total;
+        this.totalPages = response.total_pages;
         this.loadingUsersList = false;
       },
       error => this.notificationService.showError('Users List', 'An error occurred in fetching users')

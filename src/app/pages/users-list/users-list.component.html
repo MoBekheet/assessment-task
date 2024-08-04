@@ -6,7 +6,7 @@
 
   <!-- Section for the user list -->
   <section class="ps-2 py-2" [ngClass]="{'col-md-8' : (selectedUser || loadingView)}">
-    <table class="table table-hover">
+    <table class="table" [ngClass]="{'table-hover' : users.length > 0}">
 
       <thead>
         <tr>
@@ -43,13 +43,19 @@
           </td>
 
         </tr>
+        } @empty {
+          @if (!loadingView) {
+            <tr>
+              <td class="text-muted fw-bold text-center" colspan="99">There are no users</td>
+            </tr>
+          }
         }
       </tbody>
 
     </table>
 
     <!-- Load more users button -->
-    @if(!loadingUsersList && totalCount > users.length) {
+    @if(!loadingUsersList && totalPages > currentPage) {
     <div class="col-12 text-center mb-3">
       <button class="btn btn-primary" type="button" (click)="loadMoreUsers()"><i class="fas fa-plus"></i>Load More</button>
     </div>
