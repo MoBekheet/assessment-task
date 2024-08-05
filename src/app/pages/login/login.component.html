@@ -65,7 +65,7 @@
 
             <!-- Submit button with loading spinner -->
             <div class="mb-3">
-              <button type="submit" class="btn btn-primary w-100 fw-bold px-4 py-2">
+              <button type="submit" [disabled]="loading" class="btn btn-primary w-100 fw-bold px-4 py-2">
                 @if (loading) {
                 <div class="spinner-border spinner-btn text-white" role="status"></div>
                 } @else { LOGIN }
