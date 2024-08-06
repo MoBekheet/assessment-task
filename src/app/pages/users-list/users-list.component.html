@@ -129,7 +129,7 @@
         <label for="first_name" class="form-label">First name</label>
         <input
           type="text"
-          [attr.disabled]="loadingAddEdit"
+          [attr.disabled]="loadingAddEdit ? loadingAddEdit : null"
           class="form-control"
           [ngClass]="{'is-invalid': submitted && addEditForm.get('first_name')?.hasError('required')}"
           id="first_name"
@@ -143,7 +143,7 @@
 
       <div class="mb-3">
         <label for="job" class="form-label">Job Title</label>
-        <input type="text" [attr.disabled]="loadingAddEdit" class="form-control" id="job" formControlName="job" />
+        <input type="text" [attr.disabled]="loadingAddEdit ? loadingAddEdit : null" class="form-control" id="job" formControlName="job" />
       </div>
 
     </form>

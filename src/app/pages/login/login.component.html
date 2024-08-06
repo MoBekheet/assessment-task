@@ -1,6 +1,6 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="card shadow-lg p-0 h-75">
-    <div class="row no-gutters h-100">
+    <div class="row g-0 h-100">
 
       <div class="col-md-6">
         <img ngSrc="images/login-image.jpg" alt="Login Image" class="rounded rounded-end-0 position-relative object-fit-cover" loading="lazy" fill  />
@@ -22,7 +22,7 @@
                 type="text"
                 formControlName="email"
                 class="form-control"
-                [attr.disabled]="loading"
+                [attr.disabled]="loading ? loading : null"
                 [ngClass]="{'is-invalid': submitted && form.get('email')?.errors}"
                 aria-describedby="email"
                 id="email"
@@ -41,7 +41,7 @@
               <label for="password" class="form-label">Password</label>
               <input
                 type="password"
-                [attr.disabled]="loading"
+                [attr.disabled]="loading ? loading : null"
                 formControlName="password"
                 class="form-control"
                 [ngClass]="{'is-invalid': submitted && form.get('password')?.errors}"
