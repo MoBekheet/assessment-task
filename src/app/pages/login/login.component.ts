@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
   imports: [CommonModule, NgOptimizedImage, ReactiveFormsModule, NgbAlert],
 })
 export class LoginComponent implements OnInit {

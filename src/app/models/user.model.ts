@@ -15,8 +15,6 @@ export interface UserResponse {
   };
 }
 
-
-
 export interface UsersResponse {
   page: number;
   per_page: number;
